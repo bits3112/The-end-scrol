@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playground.fun</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: #111;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      margin: 0 0 20px;
+    }
+    p {
+      max-width: 600px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    button {
+      font-size: 1.1rem;
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background: #111;
+      color: white;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    button:hover { transform: scale(1.05); opacity: 0.9; }
+    .big-number { font-size: clamp(3rem, 8vw, 6rem); margin: 20px 0; }
+    .box {
+      width: 200px;
+      height: 200px;
+      background: #111;
+      margin-top: 30px;
+      transition: transform 0.3s ease;
+    }
+    input[type=range] { width: 300px; }
+  </style>
+</head>
+<body>
+
+<!-- INTRO -->
+<section>
+  <h1>Welcome.</h1>
+  <p>This is an original interactive playground inspired by the minimalist, playful style of neal.fun.</p>
+  <p>Scroll ↓</p>
+</section>
+
+<!-- CLICKER -->
+<section>
+  <h1>Click the Button</h1>
+  <div class="big-number" id="count">0</div>
+  <button onclick="increment()">Click me</button>
+</section>
+
+<!-- SCALING -->
+<section>
+  <h1>Size</h1>
+  <p>Move the slider. Things get weird.</p>
+  <input type="range" min="1" max="300" value="100" oninput="scaleBox(this.value)" />
+  <div class="box" id="box"></div>
+</section>
+
+<!-- CHOICE -->
+<section>
+  <h1>Make a Choice</h1>
+  <p>There is no correct answer.</p>
+  <button onclick="choose('Left')">Choose Left</button>
+  <br/><br/>
+  <button onclick="choose('Right')">Choose Right</button>
+  <p id="choice"></p>
+</section>
+
+<!-- SCROLL EFFECT -->
+<section id="scrollSection">
+  <h1 id="scrollText">Keep Scrolling</h1>
+</section>
+
+<!-- RANDOM FACT -->
+<section>
+  <h1>Random Number</h1>
+  <div class="big-number" id="random">0</div>
+  <button onclick="randomize()">Generate</button>
+</section>
+
+<!-- TIME -->
+<section>
+  <h1>Time Passing</h1>
+  <p id="time">Loading time...</p>
+</section>
+
+<!-- CONFIDENCE -->
+<section>
+  <h1>Confidence Meter</h1>
+  <input type="range" min="0" max="100" value="50" oninput="confidence(this.value)" />
+  <p id="confidence">Confidence: 50%</p>
+</section>
+
+<!-- DO NOTHING -->
+<section>
+  <h1>Do Nothing</h1>
+  <p>Absolutely nothing is happening.</p>
+</section>
+
+<!-- SPEED -->
+<section>
+  <h1>Speed Test</h1>
+  <button onclick="speedTest()">Click as fast as you can</button>
+  <p id="speed">Clicks: 0</p>
+</section>
+
+<!-- COLOR -->
+<section>
+  <h1>Color Experiment</h1>
+  <button onclick="changeColor()">Change Background</button>
+</section>
+
+<!-- QUESTION -->
+<section>
+  <h1>Important Question</h1>
+  <button onclick="answer('Yes')">Yes</button>
+  <button onclick="answer('No')">No</button>
+  <p id="answer"></p>
+</section>
+
+<!-- END -->
+<section>
+  <h1>That's it.</h1>
+  <p>You reached the end. Or did you?</p>
+</section>
+
+<script>
+  let count = 0;
+  function increment() {
+    count++;
+    document.getElementById('count').innerText = count;
+  }
+
+  function scaleBox(value) {
+    const scale = value / 100;
+    document.getElementById('box').style.transform = `scale(${scale})`;
+  }
+
+  function choose(option) {
+    document.getElementById('choice').innerText = `You chose: ${option}`;
+  }
+
+    function randomize() {
+    document.getElementById('random').innerText = Math.floor(Math.random() * 1_000_000);
+  }
+
+  setInterval(() => {
+    const t = new Date();
+    const el = document.getElementById('time');
+    if (el) el.innerText = t.toLocaleTimeString();
+  }, 1000);
+
+  function confidence(val) {
+    document.getElementById('confidence').innerText = `Confidence: ${val}%`;
+  }
+
+  let clicks = 0;
+  function speedTest() {
+    clicks++;
+    document.getElementById('speed').innerText = `Clicks: ${clicks}`;
+  }
+
+  function changeColor() {
+    document.body.style.background = `hsl(${Math.random()*360}, 80%, 95%)`;
+  }
+
+  function answer(a) {
+    document.getElementById('answer').innerText = `You answered: ${a}`;
+  }
+
+  window.addEventListener('scroll', () => {
+    const text = document.getElementById('scrollText');
+    if (!text) return;
+    const scrollY = window.scrollY;
+    text.style.transform = `scale(${1 + scrollY / 1500})`;
+  });
+</script>
+
+<!-- CHAOS COUNTER -->
+<section>
+  <h1>Chaos Counter</h1>
+  <p id="chaos">0</p>
+  <button onclick="chaos()">Increase Chaos</button>
+</section>
+
+<!-- GRAVITY ILLUSION -->
+<section>
+  <h1>Gravity</h1>
+  <p>Scroll to feel gravity.</p>
+  <div id="gravity" class="box"></div>
+</section>
+
+<!-- RANDOM FACT GENERATOR -->
+<section>
+  <h1>Totally Real Fact</h1>
+  <p id="fact">Click to learn.</p>
+  <button onclick="fact()">Teach Me</button>
+</section>
+
+<!-- PROGRESS THAT NEVER ENDS -->
+<section>
+  <h1>Loading…</h1>
+  <p id="load">0%</p>
+</section>
+
+<!-- TIME TRAVEL -->
+<section>
+  <h1>Time Travel</h1>
+  <button onclick="timeTravel(-1)">Go Back</button>
+  <button onclick="timeTravel(1)">Go Forward</button>
+  <p id="year"></p>
+</section>
+
+<!-- RANDOM BUTTON -->
+<section>
+  <h1>Mystery Button</h1>
+  <button onclick="mystery()">Do Not Click</button>
+  <p id="mystery"></p>
+</section>
+
+<!-- SCREEN TEST -->
+<section>
+  <h1>Screen Test</h1>
+  <p id="screen"></p>
+</section>
+
+<!-- ENDLESS -->
+<section>
+  <h1>Still Scrolling?</h1>
+  <p>This page refuses to end.</p>
+</section>
+
+<!-- LUCK -->
+<section>
+  <h1>Luck Meter</h1>
+  <p id="luck">Luck: 50%</p>
+  <button onclick="luck()">Test Luck</button>
+</section>
+
+<!-- FAKE DOWNLOAD -->
+<section>
+  <h1>Downloading…</h1>
+  <p id="download">0 MB / ∞</p>
+</section>
+
+<!-- HONEST BUTTON -->
+<section>
+  <h1>Honest Button</h1>
+  <button onclick="honest()">Click for truth</button>
+  <p id="honest"></p>
+</section>
+
+<!-- COUNTER OF COUNTERS -->
+<section>
+  <h1>Counter Counter</h1>
+  <p id="counterCounter">This counter has been seen 0 times.</p>
+</section>
+
+<!-- SHAKE TEST -->
+<section>
+  <h1>Attention Test</h1>
+  <p id="attention">Are you paying attention?</p>
+</section>
+
+<!-- RANDOM SIZE TEXT -->
+<section>
+  <h1 id="sizeText">This text cannot decide its size.</h1>
+</section>
+
+<!-- FINAL -->
+<section>
+  <h1>There Is No End</h1>
+  <p>You can stop scrolling. Or not.</p>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section>
+  <h1>Achievements</h1>
+  <p id="achieve">None unlocked.</p>
+</section>
+
+<!-- KEYBOARD SECRETS -->
+<section>
+  <h1>Keyboard Secrets</h1>
+  <p>Press random keys.</p>
+  <p id="keys"></p>
+</section>
+
+<!-- CURSOR MIRROR -->
+<section>
+  <h1>Mirror Cursor</h1>
+  <p>Move your mouse.</p>
+  <div id="mirror" class="box"></div>
+</section>
+
+<!-- TYPING PREDICTOR -->
+<section>
+  <h1>Typing Predictor</h1>
+  <input id="type" placeholder="Type anything" />
+  <p id="predict"></p>
+</section>
+
+<!-- PERSONALITY (FAKE) -->
+<section>
+  <h1>Personality Test</h1>
+  <button onclick="person('Creative')">Creative</button>
+  <button onclick="person('Curious')">Curious</button>
+  <button onclick="person('Legendary')">Legendary</button>
+  <p id="person"></p>
+</section>
+
+<!-- CONSTELLATION -->
+<section>
+  <h1>Constellation</h1>
+  <p>Click to add stars.</p>
+  <canvas id="stars" width="300" height="300"></canvas>
+</section>
+
+<!-- GRAND FINALE -->
+<section>
+  <h1>Okay. This Is Impressive.</h1>
+  <p>If someone scrolls this far, they care.</p>
+</section>
+
+<!-- FINAL BOSS MODE -->
+<section>
+  <h1>FINAL BOSS MODE</h1>
+  <p id="bossText">Initializing…</p>
+  <button onclick="boss()">Engage</button>
+</section>
+
+<!-- AI ANALYZING YOU -->
+<section>
+  <h1>AI Analysis</h1>
+  <p id="ai">Scanning behavior…</p>
+  <div class="big-number" id="aiScore">0%</div>
+</section>
+
+<!-- NEAL.FUN-STYLE HOMEPAGE -->
+<section>
+  <h1>Experiments</h1>
+  <p>Pick one. They all do something.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;max-width:800px;width:100%">
+    <button onclick="jump(0)">Clicker</button>
+    <button onclick="jump(1)">Size</button>
+    <button onclick="jump(2)">Chaos</button>
+    <button onclick="jump(3)">Luck</button>
+    <button onclick="jump(4)">Time</button>
+    <button onclick="jump(5)">Mystery</button>
+  </div>
+</section>
+
+<!-- SECRET MESSAGE -->
+<section id="secret" style="display:none">
+  <h1>Secret Unlocked</h1>
+  <p>This page noticed you.</p>
+</section>
+
+<!-- FAKE ERROR -->
+<section id="error" style="display:none">
+  <h1>Something Went Wrong</h1>
+  <p>Just kidding. You're fine.</p>
+</section>
+
+<!-- INFINITE GENERATOR -->
+<section>
+  <h1>Infinite Sections</h1>
+  <button onclick="generate()">Generate More</button>
+  <div id="infinite"></div>
+</section>
+
+<!-- END OF EVERYTHING -->
+<section>
+  <h1>You Win.</h1>
+  <p>This was the final boss.</p>
+</section>
+
+<script>
+  let chaosLevel = 0;
+  function chaos() {
+    chaosLevel++;
+    document.getElementById('chaos').innerText = chaosLevel;
+    document.body.style.transform = `rotate(${Math.min(chaosLevel, 5)}deg)`;
+  }
+
+  window.addEventListener('scroll', () => {
+    const g = document.getElementById('gravity');
+    if (g) g.style.transform = `translateY(${window.scrollY / 10}px)`;
+  });
+
+  const facts = ['Bananas are berries.','Time feels faster when you scroll.','This fact was randomly selected.','You are reading this right now.','Nothing here is important.'];
+  function fact() {
+    document.getElementById('fact').innerText = facts[Math.floor(Math.random()*facts.length)];
+  }
+
+  let load = 0;
+  setInterval(() => {
+    const el = document.getElementById('load');
+    if (!el) return;
+    load = (load + 1) % 101;
+    el.innerText = load + '%';
+  }, 200);
+
+  let year = new Date().getFullYear();
+  function timeTravel(dir) {
+    year += dir * 10;
+    document.getElementById('year').innerText = year;
+  }
+
+  function mystery() {
+    const messages = ['Why did you click?','Nothing happened.','Something happened.','Try again.'];
+    document.getElementById('mystery').innerText = messages[Math.floor(Math.random()*messages.length)];
+  }
+
+  document.getElementById('screen').innerText = `${window.innerWidth} x ${window.innerHeight}`;
+
+  function luck() {
+    document.getElementById('luck').innerText = `Luck: ${Math.floor(Math.random()*101)}%`;
+  }
+
+  let downloaded = 0;
+  setInterval(() => {
+    const d = document.getElementById('download');
+    if (!d) return;
+    downloaded += Math.random()*5;
+    d.innerText = `${downloaded.toFixed(1)} MB / ∞`;
+  }, 300);
+
+  function honest() {
+    const truths = ['This does nothing.','You expected more.','Still clicking.','Honesty achieved.'];
+    document.getElementById('honest').innerText = truths[Math.floor(Math.random()*truths.length)];
+  }
+
+  let seen = 0;
+  window.addEventListener('scroll', () => {
+    const cc = document.getElementById('counterCounter');
+    if (cc) {
+      seen++;
+      cc.innerText = `This counter has been seen ${seen} times.`;
+    }
+  });
+
+  setInterval(() => {
+    const a = document.getElementById('attention');
+    if (a) a.innerText = Math.random() > 0.5 ? 'Yes.' : 'No.';
+  }, 1000);
+
+  setInterval(() => {
+    const s = document.getElementById('sizeText');
+    if (s) s.style.fontSize = `${Math.random()*4 + 1}rem`;
+  }, 800);
+
+  // Achievements
+  let achievements = 0;
+  window.addEventListener('click', () => {
+    achievements++;
+    const a = document.getElementById('achieve');
+    if (!a) return;
+    if (achievements > 20) a.innerText = 'Unlocked: Persistent Clicker';
+    if (achievements > 60) a.innerText = 'Unlocked: Chaos Explorer';
+  });
+
+  // Keyboard secrets
+  document.addEventListener('keydown', (e) => {
+    const k = document.getElementById('keys');
+    if (k) k.innerText = `You pressed: ${e.key}`;
+  });
+
+  // Cursor mirror
+  document.addEventListener('mousemove', (e) => {
+    const m = document.getElementById('mirror');
+    if (!m) return;
+    m.style.transform = `translate(${window.innerWidth - e.clientX}px, ${window.innerHeight - e.clientY}px)`;
+  });
+
+  // Typing predictor
+  const predictions = ['Probably a sentence.', 'Definitely a thought.', 'Looks important.', 'Interesting choice of words.'];
+  document.getElementById('type')?.addEventListener('input', () => {
+    document.getElementById('predict').innerText = predictions[Math.floor(Math.random()*predictions.length)];
+  });
+
+  // Personality
+  function person(p) {
+    document.getElementById('person').innerText = `Result: ${p}`;
+  }
+
+  // Constellation
+  const c = document.getElementById('stars');
+  if (c) {
+    const ctx = c.getContext('2d');
+    c.addEventListener('click', (e) => {
+      ctx.fillStyle = '#111';
+      ctx.beginPath();
+      ctx.arc(e.offsetX, e.offsetY, 3, 0, Math.PI*2);
+      ctx.fill();
+    });
+  }
+
+  // FINAL BOSS
+  let bossClicks = 0;
+  function boss() {
+    bossClicks++;
+    const t = document.getElementById('bossText');
+    const msgs = ['Analyzing curiosity…','Measuring patience…','Calculating chaos…','Verdict reached.'];
+    t.innerText = msgs[Math.min(bossClicks-1, msgs.length-1)];
+    if (bossClicks > 3) document.getElementById('secret').style.display = 'flex';
+  }
+
+  // AI ANALYSIS
+  let score = 0;
+  setInterval(() => {
+    score = Math.min(100, score + Math.random()*8);
+    const s = document.getElementById('aiScore');
+    const a = document.getElementById('ai');
+    if (!s || !a) return;
+    s.innerText = Math.floor(score) + '%';
+    if (score > 30) a.innerText = 'Detecting curiosity…';
+    if (score > 60) a.innerText = 'High engagement detected.';
+    if (score > 90) a.innerText = 'Conclusion: Very impressive human.';
+  }, 700);
+
+  // HOMEPAGE JUMP
+  function jump(i) {
+    const sections = document.querySelectorAll('section');
+    sections[i]?.scrollIntoView({behavior:'smooth'});
+  }
+
+  // Infinite generator
+  function generate() {
+    const d = document.createElement('div');
+    d.innerText = 'Another section appeared.';
+    d.style.padding = '20px';
+    document.getElementById('infinite').appendChild(d);
+  }
+
+</script>
+</body>
+</html>
